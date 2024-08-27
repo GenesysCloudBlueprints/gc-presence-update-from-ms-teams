@@ -1,24 +1,22 @@
 ---
-title: Blacklisting Phone Numbers
-author: barrez.bert
+title: MS Teams User Presence Updates Genesys Cloud User Presence
+author: 
 indextype: blueprint
 icon: blueprint
-image: images/CallBlacklist.gif
+image: images/MS-Teams-Updates-GC.gif
 category: 4
 summary: |
-  This Genesys Cloud Developer Blueprint explains how to set up a trigger to check if an ANI on an inbound voice interaction is blacklisted. If it is blacklisted, the call will be disconnected. This features prevents inbound unwanted or fraudelent calls.
+  This Genesys Cloud Developer Blueprint explains how MS Teams User Presence can automatically update Genesys Cloud User Presence.
 ---
-This Genesys Cloud Developer Blueprint explains how to set up a trigger to check if an ANI on an inbound voice interaction is blacklisted. If it is blacklisted, the call will be disconnected. This functionality prevents unwanted or fraudulent inbound calls.
- 
-When an Architect workflow receives a customer call trigger, multiple Genesys Cloud Public API calls are made to assess if a blacklisted number is inbound calling and then terminate the call accordingly.
+This Genesys Cloud Developer Blueprint explains how MS Teams User Presence can automatically update Genesys Cloud User Presence.
 
-![Inbound Communicate call Genesys Cloud flow](images/ani-blacklist-workflow.png "Genesys Cloud Inbound Communicate Call")
+<!-- ![Inbound Communicate call Genesys Cloud flow](images/ani-blacklist-workflow.png "Genesys Cloud Inbound Communicate Call") -->
 
 The following illustration shows the end-to-end user experience that this solution enables.
 
-![End-to-end user experience](images/ani-blacklist-demo.gif "End-to-end user experience")
+![End-to-end user experience](blueprint/images/MS-Teams-Updates-GC.gif "End-to-end user experience")
 
-## Solution components
+<!-- ## Solution components
 
 * **Genesys Cloud** - A suite of Genesys cloud services for enterprise-grade communications, collaboration, and contact center management. Contact center agents use the Genesys Cloud user interface.
 * **Genesys Cloud API** - A set of RESTful APIs that enables you to extend and customize your Genesys Cloud environment.
@@ -185,4 +183,4 @@ Create the trigger that invokes the created Architect workflow.
 
 * [Genesys Cloud API Explorer](https://developer.genesys.cloud/devapps/api-explorer "Opens the GC API Explorer") in the Genesys Cloud Developer Center
 * [Genesys Cloud notification triggers](https://developer.genesys.cloud/notificationsalerts/notifications/available-topics "Opens the Available topics page") in the Genesys Cloud Developer Center
-* The [ani-blacklist](https://github.com/GenesysCloudBlueprints/ani-blacklist) repository in GitHub
+* The [ani-blacklist](https://github.com/GenesysCloudBlueprints/ani-blacklist) repository in GitHub -->
