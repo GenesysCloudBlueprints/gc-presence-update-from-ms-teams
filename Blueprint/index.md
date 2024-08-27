@@ -14,7 +14,7 @@ This Genesys Cloud Developer Blueprint explains how MS Teams User Presence can a
 
 The following illustration shows the end-to-end user experience that this solution enables.
 
-![End-to-end user experience](blueprint/images/MS-Teams-Updates-GC.gif "End-to-end user experience")
+![End-to-end user experience](Blueprint/images/MS-Teams-Updates-GC.gif "End-to-end user experience")
 
 <!-- ## Solution components
 
