@@ -1,0 +1,47 @@
+{
+  "name": "Get Genesys Cloud User Presence",
+  "integrationType": "purecloud-data-actions",
+  "actionType": "custom",
+  "config": {
+    "request": {
+      "requestUrlTemplate": "/api/v2/users/${input.USER_ID}/presences/purecloud",
+      "requestType": "GET",
+      "headers": {},
+      "requestTemplate": "${input.rawRequest}"
+    },
+    "response": {
+      "translationMap": {
+        "systemPresence": "$.['presenceDefinition'].systemPresence"
+      },
+      "translationMapDefaults": {
+        "systemPresence": "Not Found"
+      },
+      "successTemplate": "{\"systemPresence\": ${systemPresence}}"
+    }
+  },
+  "contract": {
+    "input": {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "USER_ID": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "output": {
+      "successSchema": {
+        "type": "object",
+        "properties": {
+          "systemPresence": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "secure": false
+}
