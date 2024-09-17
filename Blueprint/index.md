@@ -90,7 +90,7 @@ To create an OAuth Client in Genesys Cloud:
 
 ### Add Genesys Cloud data action integration
 
-Add a Genesys Cloud data action integration for each OAuth client being used with this blueprint to call the Genesys Cloud public API to:
+Add a Genesys Cloud data action integration for the OAuth client being used with this blueprint to call the Genesys Cloud public API to:
 * Lookup a Genesys Cloud User's presence
 * Update a Genesys Cloud User's presence
 
@@ -100,7 +100,7 @@ To create a data action integration in Genesys Cloud:
 
    ![Genesys Cloud data actions integration](images/3AGenesysCloudDataActionInstall.png "Genesys Cloud data actions integration")
 
-2. Enter a name for the Genesys Cloud data action, such as Update Genesys Cloud User Presence in this blueprint solution.
+2. Enter a name for the Genesys Cloud data action, such as **Genesys Cloud Presence API** in this blueprint solution.
 
    ![Rename the data action](images/3BRenameDataAction.png "Rename the data action")
 
@@ -139,3 +139,103 @@ The GC User Presence data actions use the authenticated token that is supplied b
 6. Select the Get-Genesys-Cloud-User-Presence.custom.json file and associate it with the **Update Genesys Cloud User Presence** integration that you created in the [Add a web services data actions integration](#add-a-web-services-data-actions-integration "Goes to the Add a web services data actions integration section") section, and then click **Import Action**.
 
  ![Import the Update Genesys Cloud User Presence data action](images/4BImportFindTeamsUserIdDataAction2.png "Import the Get Genesys Cloud User Presence data action")
+
+## Create a Data Table
+1. From the [gc-presence-update-from-ms-teams repo](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams) GitHub repository, download the **TeamsPresenceMappings.csv** file.
+2. Go to **Admin**>**Architect**>**Data Table**
+3. Click **Add**
+4. Name your data table **MsTeamsPresenceMappings** and define the **Reference Key Label** as **MsTeamsPresenceMappings**.
+ ![Create Data Table](images/CreateDataTable.png "Create Data Table")
+5. Click "Save"
+6. From the Data Table list view, open your newly created **MSTeamsPresenceMappings** Data Table
+7. From the Data Table single view, click **Manage Imports**
+8. Click **Select Import File**, locate the **TeamsPresenceMappings.csv** file on your machine
+9. Select the appropriate **Import Options** mode of **Append Data** or **Replace All Data** based on your use case
+10. Click **Import**
+
+![Import Microsoft Teams to Genesys Cloud Presence Mappings](images/ImportPresenceMappings.png "Import Presence Mappings")
+
+  :::primary
+  **Note:** Below is a table of the default presence mappings from Microsoft Teams to Genesys Cloud.  Adjust these mappings to suit your business rules.  If there are Microsoft Teams presence values that you do NOT want to trigger a Genesys Cloud presence update, simply remove them from the csv file prior to import.  
+  :::
+
+  | Teams Presence   | GC Presence | GC Presence Id |
+  |----------------|-------------------------------|-------|
+  | Available | Available | 6a3af858-942f-489d-9700-5f9bcdcdae9b |
+  | Away | Away | 5e5c5c66-ea97-4e7f-ac41-6424784829f2 |
+  | BeRightBack | Away | 5e5c5c66-ea97-4e7f-ac41-6424784829f2 |
+  | Busy | Busy | 31fe3bac-dea6-44b7-bed7-47f91660a1a0 |
+  | DoNotDisturb | Busy | 31fe3bac-dea6-44b7-bed7-47f91660a1a0 |
+  | Focusing | Busy | 31fe3bac-dea6-44b7-bed7-47f91660a1a0 |
+  | InACall | Busy | 31fe3bac-dea6-44b7-bed7-47f91660a1a0 |
+  | InAMeeting | Busy | 31fe3bac-dea6-44b7-bed7-47f91660a1a0 |
+  | Offline | Offline | ccf3c10a-aa2c-4845-8e8d-f59fa48c58e5 |
+  | OffWork | Offline | ccf3c10a-aa2c-4845-8e8d-f59fa48c58e5 |
+  | Presenting | Busy | 31fe3bac-dea6-44b7-bed7-47f91660a1a0 |
+
+
+  :::primary
+  **Note:** If you have user defined secondary presence values you would like to use in your presence mappings, you can use the **GET /api/v2/presencedefinitions** GC Public API endpoint to find all your presence definition ids.  A link to the Genesys Cloud API explorer is in the Additional Resources section at the bottom of this blueprint.  Once you have the id of the presence value you would like to use, simply update the csv file prior to import.
+  :::
+
+### Import the Architect workflow
+
+This solution includes one Architect workflow that uses the data actions you just created to retrieve and update the user's presence in Genesys Cloud.
+
+* The **Microsoft Teams Integration Presence Trigger.i3WorkFlow** workflow is triggered upon a Microsoft Teams integration presence change. This workflow looks up the GC user's current Genesys Cloud presence to ensure they are not "On Queue".  If they are not "On Queue", the Teams Presence value is looked up in a Data Table with mappings to Genesys Cloud Presence Id's.  If the Microsoft Teams presence value is found, the GC user's GC presence will be updated with the Genesys Cloud presence value corresponding to the Microsoft Teams presence value in the data table.
+
+This workflow will be called by the process automation trigger, which you will create in the next section.
+
+1. Download the **Microsoft Teams Integration Presence Trigger.i3WorkFlow** file from the [gc-presence-update-from-ms-teams repo](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams) GitHub repository.
+
+2. In Genesys Cloud, navigate to **Admin** > **Architect** > **Flows:Workflow** and click **Add**.
+
+   ![Import the workflow](images/AddWorkflow1.png "Import the workflow")
+
+3. Name your workflow and click **Create**.
+
+  ![Name your workflow](images/NameWorkflow1.png "Name your workflow")
+
+4. From the **Save** menu, click **Import**.
+
+   ![Import the workflow](images/ImportWorkflow1.png "Import the workflow")
+
+5. Select the downloaded **Microsoft Teams Integration Presence Trigger.i3WorkFlow** file. Click **Import**.
+
+   ![Import your workflow file](images/SelectWorkflow1ImportFile.png "Import your workflow file")
+
+6. After you have reviewed your workflow, click **Save** and then click **Publish**.
+
+  ![Save your workflow](images/ImportedWorkflow1.png "Save your workflow")
+
+## Create the trigger
+
+Create the trigger that invokes the created Architect workflow.
+
+1. From Admin Home, search for **Triggers** and navigate to the Triggers list.
+
+ ![Navigate to Triggers](images/NavigateToTriggers.png "Navigate to Triggers")
+
+2. From the Triggers list, click **Add Trigger**
+
+ ![Add Trigger](images/AddTrigger.png "Add Trigger")
+
+3. From the Add New Trigger modal, name your trigger and click **Add**
+
+ ![Name Trigger](images/NameTrigger.png "Name Trigger")
+
+4. From the Trigger single view, in the **Topic Name** menu, select **v2.users.{id}.integrationpresence**.  In the **Workflow Target** menu, select **Microsoft Teams Integration Presence Trigger**.  Leave **Data Format** as **TopLevelPrimitives**.  Click **Add Condition**.  For more information, see [Available Topics](https://developer.genesys.cloud/notificationsalerts/notifications/available-topics "Opens the Available Topics article") in the Genesys Cloud Developer Center.  Using the notification monitoring tool in the Developer Center, you can watch the notifications happen.
+
+5. From the Trigger single view, in the **JSON Path** field, type **source**.  In the **Operator** menu, select **Equals (==)**.  In the **Value** field, type **"MICROSOFTTEAMS"**.  Click **Create**.
+
+    ![Configure Trigger Criteria](images/ConfigureTriggerCriteria.png "Configure Trigger Criteria")
+
+6. From the Trigger single view, set the **Active** toggle to **Active**.  Click **Save**.
+
+   ![Activate Trigger](images/ActivateTrigger.png "Activate Trigger")
+
+## Additional resources
+
+* [Genesys Cloud API Explorer](https://developer.genesys.cloud/devapps/api-explorer "Opens the GC API Explorer") in the Genesys Cloud Developer Center
+* [Genesys Cloud notification triggers](https://developer.genesys.cloud/notificationsalerts/notifications/available-topics "Opens the Available topics page") in the Genesys Cloud Developer Center
+* The [gc-presence-update-from-ms-teams repo](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams) repository in GitHub
