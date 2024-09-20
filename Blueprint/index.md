@@ -1,6 +1,6 @@
 ---
 title: Update the presence of a Genesys Cloud User from Microsoft Teams User Presence Update
-author: yuri.yeti
+author: jason.wolfgang
 indextype: blueprint
 icon: blueprint
 image: images/MS-Teams-Updates-GC.gif
@@ -9,6 +9,8 @@ summary: |
   This Genesys Cloud Developer Blueprint describes how to set up Genesys Cloud to update a Genesys Cloud user's presence when the corresponding Microsoft Teams user has a presence change.
 ---
 This Genesys Cloud Developer Blueprint describes how to set up Genesys Cloud to update a Genesys Cloud user's presence when the corresponding Microsoft Teams user has a presence change.
+
+![MS Teams Presence Update to Genesys Cloud flow](images/blueprintFlow.png "MS Teams Presence Update to Genesys Cloud flow")
 
 The following illustration shows the end-to-end user experience that this solution enables.
 
@@ -120,7 +122,7 @@ To create a data action integration in Genesys Cloud:
 
 The GC User Presence data actions use the authenticated token that is supplied by the presence GC OAuth Client created in the previous step.
 
-1. From the [gc-presence-update-from-ms-teams repo](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams) GitHub repository, download the GC-User-Presence-Update.custom.json file.
+1. From the [gc-presence-update-from-ms-teams repo](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams) GitHub repository, navigate to the **exports** directory and download the GC-User-Presence-Update.custom.json file.
 
 2. In Genesys Cloud, navigate to **Integrations** > **Actions** and click **Import**.
 
@@ -130,7 +132,7 @@ The GC User Presence data actions use the authenticated token that is supplied b
 
   ![Import the Update Genesys Cloud User Presence data action](images/4BImportFindTeamsUserIdDataAction.png "Import the Update Genesys Cloud User Presence data action")
 
-4. From the [gc-presence-update-from-ms-teams repo](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams) GitHub repository, download the Get-Genesys-Cloud-User-Presence.custom.json file.
+4. From the [gc-presence-update-from-ms-teams repo](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams) GitHub repository, navigate to the **exports** directory and download the Get-Genesys-Cloud-User-Presence.custom.json file.
 
 5. In Genesys Cloud, navigate to **Integrations** > **Actions** and click **Import**.
 
@@ -141,7 +143,7 @@ The GC User Presence data actions use the authenticated token that is supplied b
  ![Import the Update Genesys Cloud User Presence data action](images/4BImportFindTeamsUserIdDataAction2.png "Import the Get Genesys Cloud User Presence data action")
 
 ## Create a Data Table
-1. From the [gc-presence-update-from-ms-teams repo](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams) GitHub repository, download the **TeamsPresenceMappings.csv** file.
+1. From the [gc-presence-update-from-ms-teams repo](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams) GitHub repository, navigate to the **exports** directory and download the **TeamsPresenceMappings.csv** file.
 2. Go to **Admin**>**Architect**>**Data Table**
 3. Click **Add**
 4. Name your data table **MsTeamsPresenceMappings** and define the **Reference Key Label** as **MsTeamsPresenceMappings**.
@@ -186,7 +188,7 @@ This solution includes one Architect workflow that uses the data actions you jus
 
 This workflow will be called by the process automation trigger, which you will create in the next section.
 
-1. Download the **Microsoft Teams Integration Presence Trigger.i3WorkFlow** file from the [gc-presence-update-from-ms-teams repo](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams) GitHub repository.
+1. From the [gc-presence-update-from-ms-teams repo](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams) GitHub repository, navigate to the **exports** directory and download the **Microsoft Teams Integration Presence Trigger.i3WorkFlow** file.
 
 2. In Genesys Cloud, navigate to **Admin** > **Architect** > **Flows:Workflow** and click **Add**.
 
