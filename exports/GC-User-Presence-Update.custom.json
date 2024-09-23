@@ -1,0 +1,46 @@
+{
+  "name": "GC User Presence Update",
+  "integrationType": "purecloud-data-actions",
+  "actionType": "custom",
+  "config": {
+    "request": {
+      "requestUrlTemplate": "/api/v2/users/${input.USER_ID}/presences/purecloud",
+      "requestType": "PATCH",
+      "headers": {
+        "Content-Type": "application/json",
+        "UserAgent": "PureCloudIntegrations/1.0"
+      },
+      "requestTemplate": "{\n  \"presenceDefinition\": {\n    \"id\": \"${input.PRESENCE_DEFINITION_ID}\"\n  },\n  \"primary\": true\n}"
+    },
+    "response": {
+      "translationMap": {},
+      "translationMapDefaults": {},
+      "successTemplate": "${rawResult}"
+    }
+  },
+  "contract": {
+    "input": {
+      "inputSchema": {
+        "title": "UserIdRequest",
+        "type": "object",
+        "properties": {
+          "USER_ID": {
+            "type": "string"
+          },
+          "PRESENCE_DEFINITION_ID": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "output": {
+      "successSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      }
+    }
+  },
+  "secure": false
+}
