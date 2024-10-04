@@ -3,7 +3,7 @@ title: Update the presence of a Genesys Cloud User from Microsoft Teams User Pre
 author: jason.wolfgang
 indextype: blueprint
 icon: blueprint
-image: images/MS-Teams-Updates-GC.gif
+image: images/images/blueprintFlow.png
 category: 6
 summary: |
   This Genesys Cloud Developer Blueprint describes how to set up Genesys Cloud to update a Genesys Cloud user's presence when the corresponding Microsoft Teams user has a presence change.
