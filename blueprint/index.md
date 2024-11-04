@@ -34,7 +34,58 @@ The following illustration shows the end-to-end user experience that this soluti
 * The Microsoft Azure Active Directory SCIM integration for Microsoft Teams must be implemented in your Genesys Cloud organization. For more information, see [Configure the Microsoft Teams integration](https://help.mypurecloud.com/?p=222880 "Opens the Configure the Microsoft Teams integration article") in the Genesys Cloud Resource Center.
 * GC Users must have their Microsoft Teams account linked to their Genesys Cloud user account.  For more information, see [Use Microsoft Teams in Genesys Cloud](https://help.mypurecloud.com/articles/use-microsoft-teams-in-genesys-cloud/ "Opens the Use Microsoft Teams in Genesys Cloud article") in the Genesys Cloud Resource Center.
 
-## Configure Genesys Cloud
+## Implementation steps
+
+You can implement Genesys Cloud objects manually or with Terraform.
+* [Configure Genesys Cloud using Terraform](#configure-genesys-cloud-using-terraform)
+* [Configure Genesys Cloud manually](#configure-genesys-cloud-manually)
+
+### Download the repository containing the project files
+
+Clone the [gc-presence-update-from-ms-teams repository](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams "Goes to the gc-presence-update-from-ms-teams repository") in GitHub.
+
+## Configure Genesys Cloud using Terraform
+
+
+### Set up Genesys Cloud
+
+1. Set the following environment variables in a terminal window before you run this project using the Terraform provider:
+
+   * `GENESYSCLOUD_OAUTHCLIENT_ID` - This variable is the Genesys Cloud client credential grant Id that CX as Code executes against. 
+   * `GENESYSCLOUD_OAUTHCLIENT_SECRET` - This variable is the Genesys Cloud client credential secret that CX as Code executes against. 
+   * `GENESYSCLOUD_REGION` - This variable is the Genesys Cloud region in your organization.
+
+2. Set the environment variables in the folder where Terraform is running. 
+
+### Configure your Terraform build
+
+* `client_id` - The value of your OAuth Client ID using Client Credentials to be used for the data action integration.
+* `client_secret`- The value of your OAuth Client secret using Client Credentials to be used for the data action integration.
+
+The following is an example of the dev.auto.tfvars file.
+
+```
+client_id       = "your-client-id"
+client_secret   = "your-client-secret"
+```
+
+### Run Terraform
+
+The blueprint solution is now ready for your organization to use. 
+
+1. Change to the **/terraform** folder and issue the following commands:
+
+   * `terraform init` - This command initializes a working directory containing Terraform configuration files.  
+   * `terraform plan` - This command executes a trial run against your Genesys Cloud organization and displays a list of all the Genesys Cloud resources Terraform created. Review this list and make sure that you are comfortable with the plan before you continue to the next step.
+   * `terraform apply --auto-approve` - This command creates and deploys the necessary objects in your Genesys Cloud account. The `--auto-approve` flag provides the required approval before the command creates the objects.
+
+After the `terraform apply --auto-approve` command successfully completes, you can see the output of the command's entire run along with the number of objects that Terraform successfully created. Keep the following points in mind:
+
+   * This project assumes that you run this blueprint solution with a local Terraform backing state, which means that the `tfstate` files are created in the same folder where you run the project. Terraform recommends that you use local Terraform backing state files **only** if you run from a desktop or are comfortable deleting files.
+
+   * As long as you keep your local Terraform backing state projects, you can tear down this blueprint solution. To tear down the solution, change to the `docs/terraform` folder and issue the  `terraform destroy --auto-approve` command. This command destroys all objects that the local Terraform backing state currently manages.
+
+## Configure Genesys Cloud manually
 
 ### Create custom roles for use with Genesys Cloud OAuth clients
 
@@ -48,17 +99,17 @@ To create a custom role in Genesys Cloud:
 
 1. Navigate to **Admin** > **Roles/Permissions** and click **Add Role**.
 
-   ![Add a custom role](images/createRole.png "Add a custom role")
+  ![Add a custom role](images/createRole.png "Add a custom role")
 
 2. Enter the **Name** for your custom role.
 
-    ![Name the custom role](images/nameCustomRole.png "Name the custom role")
+  ![Name the custom role](images/nameCustomRole.png "Name the custom role")
 
 3. Search and select the required permission for each of the custom role.
-   ![Add permissions to the custom role](images/assignPermissionToCustomRole.png "Add permissions to the custom role")
+  ![Add permissions to the custom role](images/assignPermissionToCustomRole.png "Add permissions to the custom role")
 4. Click **Save** to assign the appropriate permission to your custom role.
 
-:::primary
+  :::primary
   **Note:** Assign this custom role to your user before creating the Genesys Cloud OAuth client.
   :::
 
@@ -76,17 +127,17 @@ To create an OAuth Client in Genesys Cloud:
 
 1. Navigate to **Admin** > **Integrations** > **OAuth** and click **Add Client**.
 
-   ![Add an OAuth client](images/2AAddOAuthClient.png "Add an OAuth client")
+  ![Add an OAuth client](images/2AAddOAuthClient.png "Add an OAuth client")
 
 2. Enter the name for the OAuth client and select **Client Credentials** as the grant type. Click the **Roles** tab and assign the required role for the OAuth client.
 
-     ![Select the custom role and the grant type](images/2BOAuthClientSetup2.png "Select the custom role and the grant type")
+  ![Select the custom role and the grant type](images/2BOAuthClientSetup2.png "Select the custom role and the grant type")
 
 3. Click **Save**. Copy the client ID and the client secret values for later use.
 
-   ![Copy the client ID and client secret values](images/2COAuthClientCredentials2.png "Copy the client ID and client secret values")
+  ![Copy the client ID and client secret values](images/2COAuthClientCredentials2.png "Copy the client ID and client secret values")
 
-:::primary
+  :::primary
   **Note:** Ensure that you copy the client ID and client secret values for each of the OAuth clients.
   :::
 
@@ -100,23 +151,23 @@ To create a data action integration in Genesys Cloud:
 
 1. Navigate to **Admin** > **Integrations** > **Integrations** and install the **Genesys Cloud Data Actions** integration. For more information, see [About the data actions integrations](https://help.mypurecloud.com/?p=209478 "Opens the About the data actions integrations article") in the Genesys Cloud Resource Center.
 
-   ![Genesys Cloud data actions integration](images/3AGenesysCloudDataActionInstall.png "Genesys Cloud data actions integration")
+  ![Genesys Cloud data actions integration](images/3AGenesysCloudDataActionInstall.png "Genesys Cloud data actions integration")
 
 2. Enter a name for the Genesys Cloud data action, such as **Genesys Cloud Presence API** in this blueprint solution.
 
-   ![Rename the data action](images/3BRenameDataAction.png "Rename the data action")
+  ![Rename the data action](images/3BRenameDataAction.png "Rename the data action")
 
 3. On the **Configuration** tab, click **Credentials** and then click **Configure**.
 
-   ![Navigate to the OAuth credentials](images/3CAddOAuthCredentials.png "Navigate to the OAuth credentials")
+  ![Navigate to the OAuth credentials](images/3CAddOAuthCredentials.png "Navigate to the OAuth credentials")
 
 4. Enter the client ID and client secret that you saved for the Presence Public API [(OAuth Client 1)](#create-oauth-clients-for-use-with-genesys-cloud-data-action-integrations "Goes to the create an OAuth Client section"). Click **OK** and save the data action.
 
-   ![Add OAuth client credentials](images/3DOAuthClientIDandSecret.png "Add OAuth client credentials")
+  ![Add OAuth client credentials](images/3DOAuthClientIDandSecret.png "Add OAuth client credentials")
 
 5. Navigate to the Integrations page and set the presence data action integration to **Active**.
 
-   ![Set the data integration to active](images/3ESetToActive.png "Set the data action integration to active")
+  ![Set the data integration to active](images/3ESetToActive.png "Set the data action integration to active")
 
 ### Import two Genesys Cloud data actions
 
@@ -136,18 +187,18 @@ The GC User Presence data actions use the authenticated token that is supplied b
 
 5. In Genesys Cloud, navigate to **Integrations** > **Actions** and click **Import**.
 
- ![Import the data action](images/4AImportDataActions.png "Import the data action")
+  ![Import the data action](images/4AImportDataActions.png "Import the data action")
 
 6. Select the Get-Genesys-Cloud-User-Presence.custom.json file and associate it with the **Update Genesys Cloud User Presence** integration that you created in the [Add a web services data actions integration](#add-a-web-services-data-actions-integration "Goes to the Add a web services data actions integration section") section, and then click **Import Action**.
 
- ![Import the Update Genesys Cloud User Presence data action](images/4BImportFindTeamsUserIdDataAction2.png "Import the Get Genesys Cloud User Presence data action")
+  ![Import the Update Genesys Cloud User Presence data action](images/4BImportFindTeamsUserIdDataAction2.png "Import the Get Genesys Cloud User Presence data action")
 
 ## Create a Data Table
 1. From the [gc-presence-update-from-ms-teams repo](https://github.com/GenesysCloudBlueprints/gc-presence-update-from-ms-teams) GitHub repository, navigate to the **exports** directory and download the **TeamsPresenceMappings.csv** file.
 2. Go to **Admin**>**Architect**>**Data Table**
 3. Click **Add**
 4. Name your data table **MsTeamsPresenceMappings** and define the **Reference Key Label** as **MsTeamsPresenceMappings**.
- ![Create Data Table](images/CreateDataTable.png "Create Data Table")
+  ![Create Data Table](images/CreateDataTable.png "Create Data Table")
 5. Click "Save"
 6. From the Data Table list view, open your newly created **MSTeamsPresenceMappings** Data Table
 7. From the Data Table single view, click **Manage Imports**
@@ -155,7 +206,7 @@ The GC User Presence data actions use the authenticated token that is supplied b
 9. Select the appropriate **Import Options** mode of **Append Data** or **Replace All Data** based on your use case
 10. Click **Import**
 
-![Import Microsoft Teams to Genesys Cloud Presence Mappings](images/ImportPresenceMappings.png "Import Presence Mappings")
+  ![Import Microsoft Teams to Genesys Cloud Presence Mappings](images/ImportPresenceMappings.png "Import Presence Mappings")
 
   :::primary
   **Note:** Below is a table of the default presence mappings from Microsoft Teams to Genesys Cloud.  Adjust these mappings to suit your business rules.  If there are Microsoft Teams presence values that you do NOT want to trigger a Genesys Cloud presence update, simply remove them from the csv file prior to import.  
@@ -175,7 +226,6 @@ The GC User Presence data actions use the authenticated token that is supplied b
   | OffWork | Offline | ccf3c10a-aa2c-4845-8e8d-f59fa48c58e5 |
   | Presenting | Busy | 31fe3bac-dea6-44b7-bed7-47f91660a1a0 |
 
-
   :::primary
   **Note:** If you have user defined secondary presence values you would like to use in your presence mappings, you can use the **GET /api/v2/presencedefinitions** GC Public API endpoint to find all your presence definition ids.  A link to the Genesys Cloud API explorer is in the Additional Resources section at the bottom of this blueprint.  Once you have the id of the presence value you would like to use, simply update the csv file prior to import.
   :::
@@ -192,7 +242,7 @@ This workflow will be called by the process automation trigger, which you will c
 
 2. In Genesys Cloud, navigate to **Admin** > **Architect** > **Flows:Workflow** and click **Add**.
 
-   ![Import the workflow](images/AddWorkflow1.png "Import the workflow")
+  ![Import the workflow](images/AddWorkflow1.png "Import the workflow")
 
 3. Name your workflow and click **Create**.
 
@@ -200,11 +250,11 @@ This workflow will be called by the process automation trigger, which you will c
 
 4. From the **Save** menu, click **Import**.
 
-   ![Import the workflow](images/ImportWorkflow1.png "Import the workflow")
+  ![Import the workflow](images/ImportWorkflow1.png "Import the workflow")
 
 5. Select the downloaded **Microsoft Teams Integration Presence Trigger.i3WorkFlow** file. Click **Import**.
 
-   ![Import your workflow file](images/SelectWorkflow1ImportFile.png "Import your workflow file")
+  ![Import your workflow file](images/SelectWorkflow1ImportFile.png "Import your workflow file")
 
 6. After you have reviewed your workflow, click **Save** and then click **Publish**.
 
@@ -216,25 +266,25 @@ Create the trigger that invokes the created Architect workflow.
 
 1. From Admin Home, search for **Triggers** and navigate to the Triggers list.
 
- ![Navigate to Triggers](images/NavigateToTriggers.png "Navigate to Triggers")
+  ![Navigate to Triggers](images/NavigateToTriggers.png "Navigate to Triggers")
 
 2. From the Triggers list, click **Add Trigger**
 
- ![Add Trigger](images/AddTrigger.png "Add Trigger")
+  ![Add Trigger](images/AddTrigger.png "Add Trigger")
 
 3. From the Add New Trigger modal, name your trigger and click **Add**
 
- ![Name Trigger](images/NameTrigger.png "Name Trigger")
+  ![Name Trigger](images/NameTrigger.png "Name Trigger")
 
 4. From the Trigger single view, in the **Topic Name** menu, select **v2.users.{id}.integrationpresence**.  In the **Workflow Target** menu, select **Microsoft Teams Integration Presence Trigger**.  Leave **Data Format** as **TopLevelPrimitives**.  Click **Add Condition**.  For more information, see [Available Topics](https://developer.genesys.cloud/notificationsalerts/notifications/available-topics "Opens the Available Topics article") in the Genesys Cloud Developer Center.  Using the notification monitoring tool in the Developer Center, you can watch the notifications happen.
 
 5. From the Trigger single view, in the **JSON Path** field, type **source**.  In the **Operator** menu, select **Equals (==)**.  In the **Value** field, type **"MICROSOFTTEAMS"**.  Click **Create**.
 
-    ![Configure Trigger Criteria](images/ConfigureTriggerCriteria.png "Configure Trigger Criteria")
+  ![Configure Trigger Criteria](images/ConfigureTriggerCriteria.png "Configure Trigger Criteria")
 
 6. From the Trigger single view, set the **Active** toggle to **Active**.  Click **Save**.
 
-   ![Activate Trigger](images/ActivateTrigger.png "Activate Trigger")
+  ![Activate Trigger](images/ActivateTrigger.png "Activate Trigger")
 
 ## Additional resources
 
