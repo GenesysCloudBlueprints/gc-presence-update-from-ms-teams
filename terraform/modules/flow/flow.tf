@@ -1,6 +1,5 @@
 resource "genesyscloud_flow" "inbound_call_flow" {
   filepath = "${path.module}/ms-teams-integrations-presence-trigger.yaml"
-  file_content_hash = filesha256("${path.module}/ms-teams-integrations-presence-trigger.yaml")
   substitutions = {
     flow_name               = "Microsoft Teams Integration Presence Trigger"
     division                = "Home"
